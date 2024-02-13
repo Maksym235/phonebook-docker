@@ -1,0 +1,33 @@
+version: "3"
+services:
+  nginx:
+    depends_on:
+      - api
+      - client
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      - "3050:80"
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: "./backend"
+    volumes:
+      - /app/node_modules
+      - ./backend:/app
+    environment:
+      - DB_HOST=mongodb+srv://Ewm:zwynMBY5KwYQp80R@phonebook.maxz1g3.mongodb.net/phonebook?retryWrites=true&w=majority
+      - EMAIL_PASS=J5Q71CyLfmXHw1hw
+      - JWT_SECRET=H7hgU_6m8suSQB-05_qg0
+      - PROJECT_URL=https://callu-api.onrender.com
+      - SENDER_EMAIL=andriichukwork235@ukr.net
+  client:
+    stdin_open: true
+    build:
+      dockerfile: Dockerfile
+      context: ./frontend
+    volumes:
+      - /app/node_modules
+      - ./frontend:/app
